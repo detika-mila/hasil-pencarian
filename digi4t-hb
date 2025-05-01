@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pencarian Nama Siswa</title>
+</head>
+<body>
+  <h1>Cari Nama Siswa</h1>
+  <form id="namaForm">
+    <label for="nama">Nama Siswa:</label>
+    <input type="text" id="nama" name="nama" required>
+    <input type="submit" value="Cari">
+  </form>
+
+  <div id="hasilPencarian"></div>
+
+  <script>
+    document.getElementById('namaForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const nama = document.getElementById('nama').value;
+      const url = "https://script.google.com/macros/s/AKfycbyugSXGU4GVFy3089Eja-7lZX9xwd6U6XXy3xYRi4sO9jypCd1TpyAFqaCrrENqkDST/exec" + encodeURIComponent(nama);
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (data.data) {
+            let hasil = "<ul>";
+            data.data.forEach(item => {
+              if (item.startsWith("http")) {
+                hasil += <li><a href="${item}" target="_blank">${item}</a></li>;
+              } else {
+                hasil += <li>${item}</li>;
+              }
+            });
+            hasil += "</ul>";
+            document.getElementById('hasilPencarian').innerHTML = hasil;
+          } else {
+            document.getElementById('hasilPencarian').innerHTML = "Data tidak ditemukan.";
+          }
+        });
+    });
+  </script>
+</body>
+</html>
