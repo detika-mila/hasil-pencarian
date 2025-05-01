@@ -6,6 +6,7 @@
   <title>Pencarian Nama Siswa</title>
 </head>
 <body>
+
   <h1>Cari Nama Siswa</h1>
   <form id="namaForm">
     <label for="nama">Nama Siswa:</label>
@@ -17,29 +18,35 @@
 
   <script>
     document.getElementById('namaForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const nama = document.getElementById('nama').value;
-      const url = "https://script.google.com/macros/s/AKfycbyugSXGU4GVFy3089Eja-7lZX9xwd6U6XXy3xYRi4sO9jypCd1TpyAFqaCrrENqkDST/exec" + encodeURIComponent(nama);
+      event.preventDefault(); // Mencegah form membuka tab baru
+
+      const namaSiswa = document.getElementById('nama').value;
+      const url = "https://script.google.com/macros/s/AKfycbyugSXGU4GVFy3089Eja-7lZX9xwd6U6XXy3xYRi4sO9jypCd1TpyAFqaCrrENqkDST/exec" + encodeURIComponent(namaSiswa); // Masukkan URL Apps Script yang benar
 
       fetch(url)
-        .then(res => res.json())
+        .then(response => response.json()) // Mendapatkan hasil JSON
         .then(data => {
           if (data.data) {
-            let hasil = "<ul>";
+            let hasilHtml = "<ul>";
             data.data.forEach(item => {
               if (item.startsWith("http")) {
-                hasil += <li><a href="${item}" target="_blank">${item}</a></li>;
+                hasilHtml += <li><a href="${item}" target="_blank">${item}</a></li>;
               } else {
-                hasil += <li>${item}</li>;
+                hasilHtml += <li>${item}</li>;
               }
             });
-            hasil += "</ul>";
-            document.getElementById('hasilPencarian').innerHTML = hasil;
+            hasilHtml += "</ul>";
+            document.getElementById('hasilPencarian').innerHTML = hasilHtml;
           } else {
             document.getElementById('hasilPencarian').innerHTML = "Data tidak ditemukan.";
           }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('hasilPencarian').innerHTML = "Terjadi kesalahan.";
         });
     });
   </script>
+
 </body>
 </html>
